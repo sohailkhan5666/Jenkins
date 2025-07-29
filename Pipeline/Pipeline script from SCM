@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    environment {
+        terraform_dir = 'Day-2-introduction'
+    }
+
+    stages {
+        stage('git checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/sohailkhan5666/Terraform.git'
+            }
+        }
+
+        stage('terraform init') {
+            steps {
+                dir("${terraform_dir}") {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage('terraform plan') {
+            steps {
+                dir("${terraform_dir}") {
+                    sh 'terraform plan'
+                }
+            }
+        }
+
+        stage('terraform apply') {
+            steps {
+                dir("${terraform_dir}") {
+                    sh "terraform ${action} -auto-approve"
+                }
+            }
+        }
+    }
+}
